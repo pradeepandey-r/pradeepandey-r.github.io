@@ -1,5 +1,5 @@
 ---
-import { siArxiv, siGithub } from "simple-icons";
+import { siHuggingface, siX } from "simple-icons";
 
 interface Props {
   variant?: "rail" | "row";
@@ -10,16 +10,10 @@ const { variant = "rail", showCV = false } = Astro.props;
 
 // LinkedIn: simple-icons no longer ships it; path is Font Awesome Free 6
 // "linkedin-in" (CC BY 4.0, https://fontawesome.com/license/free).
-// brand/brandDark drive the hover "color cloud" per theme.
+// CV: Material Icons "description" (Apache 2.0). X / Hugging Face: simple-icons.
+// brand/brandDark drive the hover color per theme. A `download` attr means
+// clicking saves the file (works on iOS Safari 13+ for same-origin files).
 const links = [
-  {
-    label: "GitHub",
-    href: "https://github.com/pradeepandey-r",
-    path: siGithub.path,
-    viewBox: "0 0 24 24",
-    brand: "#181717",
-    brandDark: "#f0f6fc",
-  },
   {
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/pradeepandey-r",
@@ -29,20 +23,27 @@ const links = [
     brandDark: "#58a6e8",
   },
   {
-    label: "arXiv",
-    href: "https://arxiv.org/search/?searchtype=author&query=Pandey%2C+Pradeep",
-    path: siArxiv.path,
+    label: "X",
+    href: "https://x.com/_pradeepandey",
+    path: siX.path,
     viewBox: "0 0 24 24",
-    brand: "#B31B1B",
-    brandDark: "#e5615e",
+    brand: "#000000",
+    brandDark: "#e7e9ea",
   },
-  // CV: only when the layout confirms public/cv.pdf exists (never a dead link).
-  // Icon: Material "description" (Apache 2.0); hover uses the site's signal red.
+  {
+    label: "Hugging Face",
+    href: "https://huggingface.co/pradeepandey-r",
+    path: siHuggingface.path,
+    viewBox: "0 0 24 24",
+    brand: "#d98e00",
+    brandDark: "#ffd21e",
+  },
   ...(showCV
     ? [
         {
           label: "CV",
           href: "/cv.pdf",
+          download: "Pradeep_Pandey_CV.pdf",
           path: "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
           viewBox: "0 0 24 24",
           brand: "#e30613",
@@ -60,8 +61,9 @@ const links = [
         href={l.href}
         title={l.label}
         aria-label={l.label}
-        target="_blank"
-        rel="me noopener"
+        target={l.download ? undefined : "_blank"}
+        rel={l.download ? undefined : "me noopener"}
+        download={l.download}
         style={`--brand-lt:${l.brand};--brand-dk:${l.brandDark}`}
       >
         <svg viewBox={l.viewBox} aria-hidden="true">

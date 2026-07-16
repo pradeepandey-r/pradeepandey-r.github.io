@@ -1,6 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
+import elsewhere from "../../data/elsewhere.json";
+import demoElsewhere from "../../data/_demo-elsewhere.json";
 
 // Drafts render in `npm run dev` only, so work in progress (and the demo
 // article) can be previewed without ever reaching a build.
@@ -8,6 +10,8 @@ const showDrafts = import.meta.env.DEV;
 const all = await getCollection("articles", ({ data }) => showDrafts || !data.draft);
 const articles = all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const drafts = articles.filter((a) => a.data.draft).length;
+// Highlights posted on LessWrong / Alignment Forum; demo rows are dev-only.
+const highlights = showDrafts ? [...elsewhere, ...demoElsewhere] : elsewhere;
 const fmt = (d: Date) =>
   new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" }).format(d);
 ---
@@ -33,12 +37,32 @@ const fmt = (d: Date) =>
     )
   }
   {
+    highlights.length > 0 && (
+      <>
+        <h2 class="section-head">Elsewhere</h2>
+        <ul class="article-list">
+          {highlights.map((h) => (
+            <li>
+              <span class="a-date">{h.venue}</span>
+              <span>
+                <a href={h.href} target="_blank" rel="noopener">
+                  {h.title}
+                </a>
+                {h.note && <div class="a-desc">{h.note}</div>}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </>
+    )
+  }
+  {
     drafts > 0 && (
       <p class="demo-note">
         <strong>Draft</strong>
         <span>
-          {drafts} unpublished draft{drafts === 1 ? "" : "s"} shown because this is `npm run dev`. Drafts are stripped
-          from every build and from the RSS feed.
+          {drafts} unpublished draft{drafts === 1 ? "" : "s"} and any demo highlights shown because this is `npm run
+          dev`. All of it is stripped from every build and from the RSS feed.
         </span>
       </p>
     )

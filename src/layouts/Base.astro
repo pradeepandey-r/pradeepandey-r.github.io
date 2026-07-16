@@ -16,11 +16,11 @@ const {
   description = "Pradeep Pandey. Building toward AI safety and alignment research. Articles, papers, and projects as they become real.",
 } = Astro.props;
 
-// The CV link appears by itself once public/cv.pdf exists, so the nav can never
-// point at a missing file. Checked with fs against __SITE_ROOT__ (not cwd, not
-// import.meta.url: the first differs under `npm --prefix`, the second moves into
-// the bundle at build). Runs per request in dev, so dropping the file in just
-// needs a page refresh, and at page-generation time in builds.
+// The CV icon (in the social rail) appears by itself once public/cv.pdf exists,
+// so it can never point at a missing file. Checked with fs against __SITE_ROOT__
+// (not cwd, not import.meta.url: the first differs under `npm --prefix`, the
+// second moves into the bundle at build). Runs per request in dev, so dropping
+// the file in just needs a page refresh; at page-generation time in builds.
 const hasCV = fs.existsSync(join(__SITE_ROOT__, "public", "cv.pdf"));
 
 const nav = [
@@ -28,7 +28,6 @@ const nav = [
   { href: "/papers/", label: "Papers" },
   { href: "/articles/", label: "Articles" },
   { href: "/projects/", label: "Projects" },
-  ...(hasCV ? [{ href: "/cv.pdf", label: "CV", file: true }] : []),
 ];
 const path = Astro.url.pathname;
 const isCurrent = (href: string) =>
@@ -65,8 +64,13 @@ const isCurrent = (href: string) =>
             t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           document.documentElement.dataset.theme = t;
         };
+        const syncSwitch = () => {
+          const b = document.getElementById("theme-toggle");
+          if (b) b.setAttribute("aria-checked", String(document.documentElement.dataset.theme === "dark"));
+        };
         apply();
         document.addEventListener("astro:after-swap", apply);
+        document.addEventListener("astro:page-load", syncSwitch);
         document.addEventListener("click", (e) => {
           if (!(e.target instanceof Element) || !e.target.closest("#theme-toggle")) return;
           const r = document.documentElement;
@@ -75,6 +79,7 @@ const isCurrent = (href: string) =>
           try {
             localStorage.setItem("theme", t);
           } catch {}
+          syncSwitch();
         });
       })();
     </script>
@@ -87,45 +92,27 @@ const isCurrent = (href: string) =>
         <a class="masthead-name" href="/">Pradeep Pandey</a>
         <div class="masthead-tag">Building toward AI safety &amp; alignment research</div>
       </div>
-      <nav class="site-nav" aria-label="Site">
-        {
-          nav.map((n) => (
-            <a
-              href={n.href}
-              aria-current={isCurrent(n.href) ? "page" : undefined}
-              target={n.file ? "_blank" : undefined}
-              rel={n.file ? "noopener" : undefined}
-            >
-              {n.label}
-            </a>
-          ))
-        }
-      </nav>
-      <div class="header-controls">
-        <button class="icon-btn" id="theme-toggle" aria-label="Toggle dark / light theme" title="Toggle theme">
+      <div class="wrap nav-wrap">
+        <nav class="site-nav" aria-label="Site">
+          {nav.map((n) => <a href={n.href} aria-current={isCurrent(n.href) ? "page" : undefined}>{n.label}</a>)}
+        </nav>
+        <button class="theme-switch" id="theme-toggle" role="switch" aria-checked="false" aria-label="Dark theme">
           <svg
-            class="icon-moon"
+            class="sw-sun"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="1.8"
+            stroke-width="2.4"
             stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"></path></svg
-          >
-          <svg
-            class="icon-sun"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
             aria-hidden="true"
-            ><circle cx="12" cy="12" r="4"></circle><path
-              d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+            ><circle cx="12" cy="12" r="4.5"></circle><path
+              d="M12 2v2.5m0 15V22M4.9 4.9l1.8 1.8m10.6 10.6 1.8 1.8M2 12h2.5m15 0H22M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"
             ></path></svg
           >
+          <svg class="sw-moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"
+            ><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"></path></svg
+          >
+          <span class="knob" aria-hidden="true"></span>
         </button>
       </div>
     </header>

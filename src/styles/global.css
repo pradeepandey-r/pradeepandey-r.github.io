@@ -130,12 +130,17 @@ a:hover {
   text-transform: uppercase;
   color: var(--muted);
 }
+/* nav row: links centered in the content column, theme switch at its right */
+.nav-wrap {
+  position: relative;
+  padding-block: 0.85rem 0.5rem; /* tight gap to the header rule below */
+}
 .site-nav {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.35rem 2.5rem;
-  padding: 0.85rem 1rem 1.05rem;
+  padding-inline: 3.2rem; /* keeps links clear of the switch on both sides */
 }
 .site-nav a {
   font-size: 0.78rem;
@@ -154,35 +159,49 @@ a:hover {
   border-bottom: 1px solid var(--accent-dim);
 }
 
-/* ---------- header controls: theme + palette ---------- */
-.header-controls {
+/* ---------- theme switch: sliding toggle on the nav line ---------- */
+.theme-switch {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-}
-.icon-btn {
-  background: none;
-  border: none;
-  padding: 0.15rem;
+  right: 1.25rem; /* flush with the content column edge */
+  top: calc(50% + 0.17rem); /* optically centered on the nav text line */
+  transform: translateY(-50%);
+  width: 42px;
+  height: 22px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--code-bg);
   cursor: pointer;
+  padding: 0;
+}
+.theme-switch:hover {
+  border-color: var(--accent-dim);
+}
+.theme-switch svg {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 11px;
+  height: 11px;
   color: var(--muted);
-  display: inline-flex;
 }
-.icon-btn:hover {
-  color: var(--accent-deep);
+.theme-switch .sw-sun {
+  left: 5px;
 }
-.icon-btn svg {
-  width: 17px;
-  height: 17px;
+.theme-switch .sw-moon {
+  right: 5px;
 }
-:root[data-theme="light"] .icon-sun {
-  display: none;
+.theme-switch .knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: transform 0.22s ease;
 }
-:root[data-theme="dark"] .icon-moon {
-  display: none;
+:root[data-theme="dark"] .theme-switch .knob {
+  transform: translateX(20px);
 }
 
 /* ---------- section heads: diamond marker ---------- */
@@ -597,6 +616,56 @@ a:hover {
   width: 21px;
   height: 21px;
   fill: currentColor;
+}
+
+/* ---------- smartphone layout ---------- */
+@media (max-width: 640px) {
+  .masthead {
+    padding-block: 1.35rem 0.15rem;
+  }
+  .masthead-name {
+    font-size: 1.18rem;
+    letter-spacing: 0.11em;
+  }
+  .masthead-tag {
+    font-size: 0.56rem;
+    letter-spacing: 0.19em;
+  }
+  .nav-wrap {
+    padding-block: 0.7rem 0.45rem;
+  }
+  .site-nav {
+    gap: 0.3rem 1rem;
+    padding-inline: 0 3rem; /* switch zone on the right only; links lead left */
+    justify-content: flex-start;
+  }
+  .site-nav a {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+  }
+  .theme-switch {
+    right: 1.1rem;
+  }
+  main.wrap {
+    padding-block: 1.7rem 2.2rem;
+  }
+  .hero {
+    margin-top: 0.4rem;
+    gap: 1.5rem;
+  }
+  .section-head {
+    margin: 2rem 0 0.8rem;
+  }
+  .page-title {
+    font-size: 1.32rem;
+  }
+  .lede,
+  .hero-text .lede {
+    font-size: 1.15rem;
+  }
+  .site-footer .wrap {
+    padding-block: 1rem;
+  }
 }
 
 /* ---------- footer ---------- */

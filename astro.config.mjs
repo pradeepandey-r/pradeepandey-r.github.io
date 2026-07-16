@@ -6,7 +6,7 @@ import rehypeKatex from "rehype-katex";
 import { fileURLToPath } from "node:url";
 
 export default defineConfig({
-  site: "https://pradeepandey-r.github.io",
+  site: "https://pradeeppandey.name.np",
   // Fetch pages on link hover so SPA navigations feel instant.
   prefetch: { prefetchAll: true },
   vite: {

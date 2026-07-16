@@ -1,0 +1,13 @@
+[
+  {
+    "venue": "LessWrong",
+    "title": "A Sample Highlight Post Title, Long Enough to Wrap",
+    "href": "#demo",
+    "note": "Placeholder one-liner describing the linked post."
+  },
+  {
+    "venue": "Alignment Forum",
+    "title": "Second Placeholder Highlight",
+    "href": "#demo"
+  }
+]
