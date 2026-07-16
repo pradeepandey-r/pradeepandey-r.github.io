@@ -130,7 +130,7 @@ const isCurrent = (href: string) =>
       </div>
     </header>
 
-    <Socials variant="rail" />
+    <Socials variant="rail" showCV={hasCV} />
 
     <main class="wrap">
       <slot />
@@ -138,7 +138,7 @@ const isCurrent = (href: string) =>
 
     <footer class="site-footer">
       <div class="wrap">
-        <Socials variant="row" />
+        <Socials variant="row" showCV={hasCV} />
         <span>© 2026 Pradeep Pandey · <a href="/rss.xml">RSS</a></span>
       </div>
     </footer>
