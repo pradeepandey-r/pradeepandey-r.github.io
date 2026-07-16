@@ -1,0 +1,12 @@
+# Never apply line-ending conversion to binaries (git misdetects mostly-ASCII
+# PDFs as text, which corrupts them on checkout).
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
