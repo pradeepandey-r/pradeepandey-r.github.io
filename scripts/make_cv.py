@@ -21,22 +21,22 @@ ML, MR, MT, MB = 1.4 * cm, 1.4 * cm, 1.0 * cm, 1.35 * cm
 USABLE = W - ML - MR
 
 S = dict(
-    name=ParagraphStyle("name", fontName="Times-Bold", fontSize=16.5, leading=19,
+    name=ParagraphStyle("name", fontName="Helvetica-Bold", fontSize=16.5, leading=19,
                         alignment=TA_CENTER, textColor=INK, spaceAfter=1),
-    tagline=ParagraphStyle("tagline", fontName="Times-Roman", fontSize=7.6, leading=9.5,
+    tagline=ParagraphStyle("tagline", fontName="Helvetica", fontSize=7.6, leading=9.5,
                            alignment=TA_CENTER, textColor=FADED, spaceAfter=2),
-    contact=ParagraphStyle("contact", fontName="Times-Roman", fontSize=8.6, leading=11,
+    contact=ParagraphStyle("contact", fontName="Helvetica", fontSize=8.6, leading=11,
                            alignment=TA_CENTER, textColor=INK, spaceAfter=0),
-    section=ParagraphStyle("section", fontName="Times-Bold", fontSize=8.2, leading=10,
+    section=ParagraphStyle("section", fontName="Helvetica-Bold", fontSize=8.2, leading=10,
                            textColor=ACCENT, spaceBefore=7, spaceAfter=1),
-    body=ParagraphStyle("body", fontName="Times-Roman", fontSize=8.7, leading=10.8,
+    body=ParagraphStyle("body", fontName="Helvetica", fontSize=8.7, leading=10.8,
                         textColor=INK, spaceAfter=2),
-    entryL=ParagraphStyle("entryL", fontName="Times-Bold", fontSize=8.9, leading=10.8, textColor=INK),
-    entryR=ParagraphStyle("entryR", fontName="Times-Roman", fontSize=8.2, leading=10.8,
+    entryL=ParagraphStyle("entryL", fontName="Helvetica-Bold", fontSize=8.9, leading=10.8, textColor=INK),
+    entryR=ParagraphStyle("entryR", fontName="Helvetica", fontSize=8.2, leading=10.8,
                           textColor=FADED, alignment=2),
-    bullet=ParagraphStyle("bullet", fontName="Times-Roman", fontSize=8.7, leading=10.7,
+    bullet=ParagraphStyle("bullet", fontName="Helvetica", fontSize=8.7, leading=10.7,
                           textColor=INK, leftIndent=10, bulletIndent=2, spaceAfter=1,
-                          bulletFontName="Times-Bold", bulletFontSize=8.7, bulletColor=ACCENT),
+                          bulletFontName="Helvetica-Bold", bulletFontSize=8.7, bulletColor=ACCENT),
 )
 
 def sp(text):  # letterspaced small-caps-ish section title, word gaps preserved
@@ -163,7 +163,7 @@ story.append(Paragraph(
 
 def footer(canvas, doc):
     canvas.saveState()
-    canvas.setFont("Times-Roman", 7)
+    canvas.setFont("Helvetica", 7)
     canvas.setFillColor(FADED)
     canvas.drawCentredString(
         W / 2, 0.55 * cm,
