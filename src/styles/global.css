@@ -208,9 +208,12 @@ a:hover {
 
 /* ---------- home hero ---------- */
 .hero {
+  /* photo cell = 13rem photo + 1.3rem air on EACH side, so the block is
+     horizontally centered in its region instead of flush with the left edge
+     (text column width is unchanged: 15.6rem = old 13rem + 2.6rem gap) */
   display: grid;
-  grid-template-columns: 13rem 1fr;
-  gap: 2.6rem;
+  grid-template-columns: 15.6rem 1fr;
+  gap: 0;
   align-items: start;
   margin-top: 0.9rem;
 }
@@ -232,7 +235,9 @@ a:hover {
 }
 
 .portrait-side {
-  align-self: center; /* photo + caption sit at the vertical middle of the hero */
+  align-self: center; /* vertical middle of the hero */
+  justify-self: center; /* horizontal middle of the photo cell */
+  width: 13rem;
 }
 .portrait {
   width: 100%;
