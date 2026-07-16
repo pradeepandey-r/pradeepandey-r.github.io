@@ -1,5 +1,6 @@
 ---
-import { siHuggingface, siX } from "simple-icons";
+import { siX } from "simple-icons";
+import hf from "../data/_hf-icon.json";
 
 interface Props {
   variant?: "rail" | "row";
@@ -31,12 +32,11 @@ const links = [
     brandDark: "#e7e9ea",
   },
   {
+    // Official multicolor logo (logos icon set); grayscaled at rest via CSS,
+    // full color on hover. No brand vars needed: the fills are baked in.
     label: "Hugging Face",
     href: "https://huggingface.co/pradeepandey-r",
-    path: siHuggingface.path,
-    viewBox: "0 0 24 24",
-    brand: "#d98e00",
-    brandDark: "#ffd21e",
+    svg: { viewBox: `0 0 ${hf.width} ${hf.height}`, body: hf.body },
   },
   ...(showCV
     ? [
@@ -64,11 +64,17 @@ const links = [
         target={l.download ? undefined : "_blank"}
         rel={l.download ? undefined : "me noopener"}
         download={l.download}
-        style={`--brand-lt:${l.brand};--brand-dk:${l.brandDark}`}
+        style={l.brand ? `--brand-lt:${l.brand};--brand-dk:${l.brandDark}` : undefined}
       >
-        <svg viewBox={l.viewBox} aria-hidden="true">
-          <path d={l.path} />
-        </svg>
+        {
+          l.svg ? (
+            <svg class="hf-logo" viewBox={l.svg.viewBox} aria-hidden="true" set:html={l.svg.body} />
+          ) : (
+            <svg viewBox={l.viewBox} aria-hidden="true">
+              <path d={l.path} />
+            </svg>
+          )
+        }
       </a>
     ))
   }

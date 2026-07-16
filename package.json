@@ -16,5 +16,8 @@
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "simple-icons": "^16.26.0"
+  },
+  "devDependencies": {
+    "@iconify-json/logos": "^1.2.11"
   }
 }

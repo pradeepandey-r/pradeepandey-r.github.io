@@ -380,6 +380,13 @@ a:hover {
   gap: 1rem;
   padding-block: 0.5rem;
 }
+/* list titles: the nav-hover shade (deep red), not the loud base accent */
+.article-list a {
+  color: var(--accent-deep);
+}
+.article-list a:hover {
+  color: var(--accent);
+}
 .article-list .a-date {
   color: var(--muted);
   font-size: 0.88rem;
@@ -414,7 +421,7 @@ a:hover {
   border-bottom: 1px solid var(--line);
 }
 .entry-key {
-  color: var(--accent);
+  color: var(--accent-deep);
   font-size: 0.78rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -445,6 +452,10 @@ a:hover {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  color: var(--accent-deep);
+}
+.entry-links a:hover {
+  color: var(--accent);
 }
 .entry-tags {
   color: var(--muted);
@@ -616,6 +627,16 @@ a:hover {
   width: 21px;
   height: 21px;
   fill: currentColor;
+}
+/* Hugging Face: official color logo, muted to gray at rest, true colors on hover */
+.social-rail svg.hf-logo,
+.social-row svg.hf-logo {
+  filter: grayscale(1) opacity(0.55);
+  transition: filter 0.2s ease;
+}
+.social-rail a:hover svg.hf-logo,
+.social-row a:hover svg.hf-logo {
+  filter: none;
 }
 
 /* ---------- smartphone layout ---------- */
