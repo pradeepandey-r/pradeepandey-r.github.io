@@ -1,0 +1,55 @@
+---
+import Base from "../layouts/Base.astro";
+import papers from "../data/papers.json";
+import demoPapers from "../data/_demo-papers.json";
+
+// Demo rows exist so the layout can be judged with content in it. They are
+// dev-only: `astro build` sets DEV=false, so they can never reach the site.
+const showDemo = import.meta.env.DEV;
+const items = showDemo ? [...papers, ...demoPapers] : papers;
+---
+
+<Base title="Papers · Pradeep Pandey" description="Papers, preprints, and technical notes by Pradeep Pandey.">
+  <h1 class="page-title">Papers</h1>
+  <p class="page-sub">
+    Preprints, publications, and technical notes, listed only once they exist, with code and data where applicable.
+  </p>
+
+  {
+    items.length === 0 ? (
+      <p class="empty">
+        Nothing yet. I'm at the foundations stage of a long program of study; entries will appear here as the work
+        becomes real.
+      </p>
+    ) : (
+      <ul class="entry-list">
+        {items.map((p) => (
+          <li>
+            <span class="entry-key">{p.key}</span>
+            <div>
+              <div class="entry-title">{p.title}</div>
+              <div class="entry-meta">{p.meta}</div>
+              {p.note && <div class="entry-note">{p.note}</div>}
+              {p.links && (
+                <div class="entry-links">
+                  {p.links.map((l) => (
+                    <a href={l.href}>{l.label}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    showDemo && demoPapers.length > 0 && (
+      <p class="demo-note">
+        <strong>Demo</strong>
+        <span>Sample rows for layout testing, shown only in `npm run dev`. They are stripped from every build.</span>
+      </p>
+    )
+  }
+</Base>

@@ -1,0 +1,46 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+// Drafts render in `npm run dev` only, so work in progress (and the demo
+// article) can be previewed without ever reaching a build.
+const showDrafts = import.meta.env.DEV;
+const all = await getCollection("articles", ({ data }) => showDrafts || !data.draft);
+const articles = all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const drafts = articles.filter((a) => a.data.draft).length;
+const fmt = (d: Date) =>
+  new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" }).format(d);
+---
+
+<Base title="Articles · Pradeep Pandey" description="Technical writing by Pradeep Pandey.">
+  <h1 class="page-title">Articles</h1>
+  <p class="page-sub">Technical writing on mathematics, machine learning, and transformer internals.</p>
+  {
+    articles.length === 0 ? (
+      <p class="empty">No articles yet. The first ones will appear here as they're written.</p>
+    ) : (
+      <ul class="article-list">
+        {articles.map((a) => (
+          <li>
+            <span class="a-date">{fmt(a.data.date)}</span>
+            <span>
+              <a href={`/articles/${a.id}/`}>{a.data.title}</a>
+              <div class="a-desc">{a.data.description}</div>
+            </span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    drafts > 0 && (
+      <p class="demo-note">
+        <strong>Draft</strong>
+        <span>
+          {drafts} unpublished draft{drafts === 1 ? "" : "s"} shown because this is `npm run dev`. Drafts are stripped
+          from every build and from the RSS feed.
+        </span>
+      </p>
+    )
+  }
+</Base>

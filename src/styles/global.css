@@ -1,0 +1,620 @@
+/* ============================================================
+   Pradeep Pandey, personal site
+   Swiss / International Typographic style. Neutral sans, flat ground,
+   near-black text, one signal color (red), no warmth.
+
+   Palette: Signal Red, finalized. Only these 8 colors are authored;
+   every other tone (muted, hairlines, cards, code bg, glows) is
+   DERIVED below with color-mix, so changing a base color re-tunes
+   the whole site. Dark text is smoke white, never pure white.
+   ============================================================ */
+
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --accent: #e30613;
+  --accent-deep: #99040d;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #0b0b0c;
+  --text: #dcdcdc;
+  --accent: #ff453a;
+  --accent-deep: #ff8078;
+  color-scheme: dark;
+}
+
+/* derived tokens, recomputed automatically per mode */
+:root {
+  --muted: color-mix(in oklab, var(--text) 60%, var(--bg));
+  --line: color-mix(in oklab, var(--text) 14%, var(--bg));
+  --card: color-mix(in oklab, var(--bg) 94%, var(--text));
+  --bg-tint: color-mix(in oklab, var(--accent) 8%, var(--bg));
+  --code-bg: color-mix(in oklab, var(--text) 6%, var(--bg));
+  --accent-dim: color-mix(in srgb, var(--accent) 35%, transparent);
+  --glow: color-mix(in srgb, var(--accent) 30%, transparent);
+  --glow-soft: color-mix(in srgb, var(--accent) 13%, transparent);
+  --shadow: color-mix(in srgb, var(--text) 40%, transparent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Reserve the scrollbar strip so short and tall pages render at the same
+     width — no header-line jump or content shift between pages. */
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    "Segoe UI Variable Text",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 45rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+main.wrap {
+  flex: 1;
+  padding-block: 2.3rem 3rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--accent-deep);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- header: centered masthead ---------- */
+.site-header {
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(to bottom, var(--bg-tint), var(--bg));
+}
+.masthead {
+  text-align: center;
+  padding-block: 1.9rem 0.4rem;
+}
+.masthead-name {
+  font-size: 1.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text);
+}
+.masthead-name:hover {
+  text-decoration: none;
+  color: var(--accent-deep);
+}
+.masthead-tag {
+  margin-top: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.site-nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 2.5rem;
+  padding: 0.85rem 1rem 1.05rem;
+}
+.site-nav a {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+.site-nav a:hover {
+  color: var(--accent-deep);
+  text-decoration: none;
+}
+.site-nav a[aria-current="page"] {
+  color: var(--accent-deep);
+  border-bottom: 1px solid var(--accent-dim);
+}
+
+/* ---------- header controls: theme + palette ---------- */
+.header-controls {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.icon-btn {
+  background: none;
+  border: none;
+  padding: 0.15rem;
+  cursor: pointer;
+  color: var(--muted);
+  display: inline-flex;
+}
+.icon-btn:hover {
+  color: var(--accent-deep);
+}
+.icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
+:root[data-theme="light"] .icon-sun {
+  display: none;
+}
+:root[data-theme="dark"] .icon-moon {
+  display: none;
+}
+
+/* ---------- section heads: diamond marker ---------- */
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 2.6rem 0 1rem;
+}
+.section-head::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+
+/* ---------- home hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 13rem 1fr;
+  gap: 2.6rem;
+  align-items: start;
+  margin-top: 0.9rem;
+}
+.hero-text .lede {
+  font-size: 1.32rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  margin: 0 0 1.1rem;
+}
+.lede-hl {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--accent-deep);
+}
+.hero-text p {
+  margin: 0 0 1rem;
+}
+
+.portrait-side {
+  align-self: center; /* photo + caption sit at the vertical middle of the hero */
+}
+.portrait {
+  width: 100%;
+  height: auto; /* beat the height="" attribute so aspect-ratio governs */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%; /* circle */
+  display: block;
+  /* soft signal-red blur behind the picture (no rim), depth shadow under */
+  box-shadow:
+    0 0 26px -2px color-mix(in srgb, var(--accent) 32%, transparent),
+    0 10px 24px -14px var(--shadow);
+}
+.portrait-caption {
+  text-align: center;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin-top: 0.85rem;
+}
+.portrait-caption .id-name {
+  color: var(--text);
+  font-size: 0.93rem;
+  font-weight: 600;
+}
+.portrait-caption .id-email {
+  margin-top: 0.35rem;
+  font-size: 0.76rem;
+}
+@media (max-width: 780px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 1.8rem;
+  }
+  .portrait-side {
+    max-width: 11.5rem;
+    margin-inline: auto;
+  }
+}
+
+/* ---------- news: neon timeline (dimmed) ---------- */
+.news {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0.1rem 0 0.1rem 1.35rem;
+}
+.news::before {
+  /* glowing spine */
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  bottom: 0.35rem;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, transparent, var(--accent) 14%, var(--accent) 86%, transparent);
+  box-shadow:
+    0 0 4px var(--glow),
+    0 0 10px var(--glow-soft);
+}
+.news li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 0.9rem;
+  padding-block: 0.4rem;
+}
+.news li::before {
+  content: "";
+  position: absolute;
+  left: calc(-1.35rem - 2.5px);
+  top: 0.92rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow:
+    0 0 0 3px var(--bg),
+    0 0 5px 1px var(--glow),
+    0 0 10px 2px var(--glow-soft);
+}
+.news .news-date {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 480px) {
+  .news li {
+    grid-template-columns: 1fr;
+    gap: 0.05rem;
+    padding-block: 0.5rem;
+  }
+}
+
+/* ---------- subpages ---------- */
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0.5rem 0 0.4rem;
+}
+.page-sub {
+  color: var(--muted);
+  margin-top: 0;
+}
+.empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ---------- article list ---------- */
+.article-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.4rem 0 0;
+}
+.article-list li {
+  display: grid;
+  grid-template-columns: 6.6rem 1fr;
+  gap: 1rem;
+  padding-block: 0.5rem;
+}
+.article-list .a-date {
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+.article-list .a-desc {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+}
+@media (max-width: 480px) {
+  .article-list li {
+    grid-template-columns: 1fr;
+    gap: 0.05rem;
+  }
+}
+
+/* ---------- papers + projects ---------- */
+.entry-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+}
+.entry-list > li {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  gap: 0.9rem;
+  padding-block: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+.entry-list > li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.entry-key {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  padding-top: 0.2rem;
+}
+.entry-title {
+  font-weight: 600;
+  line-height: 1.42;
+}
+.entry-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 0.12rem;
+}
+.entry-note {
+  font-size: 0.88rem;
+  margin-top: 0.3rem;
+}
+.entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.45rem;
+}
+.entry-links a {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.entry-tags {
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  margin-top: 0.35rem;
+  text-transform: uppercase;
+}
+@media (max-width: 480px) {
+  .entry-list > li {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+}
+
+/* dev-only banner marking demo content (never rendered by `astro build`) */
+.demo-note {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  margin-top: 1.3rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px dashed var(--accent);
+  border-radius: 3px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.demo-note strong {
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* ---------- article body ---------- */
+.article-head {
+  margin-bottom: 1.6rem;
+}
+.article-date {
+  color: var(--muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.prose h2 {
+  font-size: 1.22rem;
+  letter-spacing: -0.01em;
+  margin: 2rem 0 0.6rem;
+}
+.prose h3 {
+  font-size: 1.05rem;
+  margin: 1.6rem 0 0.5rem;
+}
+.prose p {
+  margin: 0 0 1rem;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.prose blockquote {
+  margin: 1.2rem 0;
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  border-left: 2px solid var(--accent-dim);
+  color: var(--muted);
+  font-style: italic;
+}
+.prose code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
+  font-size: 0.88em;
+}
+.prose :not(pre) > code {
+  background: var(--code-bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 0.08em 0.35em;
+}
+.prose pre {
+  padding: 1rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  overflow-x: auto;
+  line-height: 1.5;
+  font-size: 0.85rem;
+}
+.prose table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+.prose th,
+.prose td {
+  border: 1px solid var(--line);
+  padding: 0.35rem 0.6rem;
+}
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+
+/* Shiki dual-theme code colors */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+}
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark);
+}
+.astro-code {
+  background-color: var(--code-bg) !important;
+}
+
+/* KaTeX display math can overflow on small screens */
+.prose .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.2rem;
+}
+
+/* ---------- social rail: fixed just left of the content column ---------- */
+.social-rail {
+  position: fixed;
+  left: calc(50% - 22.5rem - 2.35rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  flex-direction: column;
+  gap: 1.05rem;
+  z-index: 10;
+}
+.social-row {
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 1080px) {
+  .social-rail {
+    display: flex;
+  }
+  .social-row {
+    display: none;
+  }
+}
+.social-rail a,
+.social-row a {
+  --brand: var(--brand-lt, var(--accent-deep));
+  color: var(--muted);
+  display: inline-flex;
+  transition: color 0.2s ease;
+}
+:root[data-theme="dark"] .social-rail a,
+:root[data-theme="dark"] .social-row a {
+  --brand: var(--brand-dk, var(--brand-lt, var(--accent-deep)));
+}
+.social-rail a:hover,
+.social-row a:hover {
+  /* hover = the actual logo color, nothing else */
+  color: var(--brand);
+  transform: translateY(-1px);
+}
+.social-rail svg,
+.social-row svg {
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: auto;
+}
+.site-footer .wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding-block: 1.2rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+/* Scoped to the copyright line: a bare `.site-footer a:hover` would tie on
+   specificity with the social hover and, coming later, override the brand
+   color on the footer icon row (visible below 1080px). */
+.site-footer .wrap > span a {
+  color: var(--muted);
+}
+.site-footer .wrap > span a:hover {
+  color: var(--accent-deep);
+}

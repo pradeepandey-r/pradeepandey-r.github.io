@@ -1,0 +1,49 @@
+---
+import Base from "../layouts/Base.astro";
+import projects from "../data/projects.json";
+import demoProjects from "../data/_demo-projects.json";
+
+// Dev-only demo rows; see the note in papers.astro.
+const showDemo = import.meta.env.DEV;
+const items = showDemo ? [...projects, ...demoProjects] : projects;
+---
+
+<Base title="Projects · Pradeep Pandey" description="Software and research tooling by Pradeep Pandey.">
+  <h1 class="page-title">Projects</h1>
+  <p class="page-sub">Software and research tooling, listed as it's built and released.</p>
+
+  {
+    items.length === 0 ? (
+      <p class="empty">Nothing to show yet. The first projects are in progress.</p>
+    ) : (
+      <ul class="entry-list">
+        {items.map((p) => (
+          <li>
+            <span class="entry-key">{p.key}</span>
+            <div>
+              <div class="entry-title">{p.title}</div>
+              {p.note && <div class="entry-note">{p.note}</div>}
+              {p.tags && <div class="entry-tags">{p.tags}</div>}
+              {p.links && (
+                <div class="entry-links">
+                  {p.links.map((l) => (
+                    <a href={l.href}>{l.label}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    showDemo && demoProjects.length > 0 && (
+      <p class="demo-note">
+        <strong>Demo</strong>
+        <span>Sample rows for layout testing, shown only in `npm run dev`. They are stripped from every build.</span>
+      </p>
+    )
+  }
+</Base>

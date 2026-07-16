@@ -1,0 +1,57 @@
+---
+import { siArxiv, siGithub } from "simple-icons";
+
+interface Props {
+  variant?: "rail" | "row";
+}
+const { variant = "rail" } = Astro.props;
+
+// LinkedIn: simple-icons no longer ships it; path is Font Awesome Free 6
+// "linkedin-in" (CC BY 4.0, https://fontawesome.com/license/free).
+// brand/brandDark drive the hover "color cloud" per theme.
+const links = [
+  {
+    label: "GitHub",
+    href: "https://github.com/pradeepandey-r",
+    path: siGithub.path,
+    viewBox: "0 0 24 24",
+    brand: "#181717",
+    brandDark: "#f0f6fc",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/pradeepandey-r",
+    path: "M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 155.6z",
+    viewBox: "0 0 448 512",
+    brand: "#0A66C2",
+    brandDark: "#58a6e8",
+  },
+  {
+    label: "arXiv",
+    href: "https://arxiv.org/search/?searchtype=author&query=Pandey%2C+Pradeep",
+    path: siArxiv.path,
+    viewBox: "0 0 24 24",
+    brand: "#B31B1B",
+    brandDark: "#e5615e",
+  },
+];
+---
+
+<nav class={variant === "rail" ? "social-rail" : "social-row"} aria-label={variant === "rail" ? "Profiles" : "Profiles (footer)"}>
+  {
+    links.map((l) => (
+      <a
+        href={l.href}
+        title={l.label}
+        aria-label={l.label}
+        target="_blank"
+        rel="me noopener"
+        style={`--brand-lt:${l.brand};--brand-dk:${l.brandDark}`}
+      >
+        <svg viewBox={l.viewBox} aria-hidden="true">
+          <path d={l.path} />
+        </svg>
+      </a>
+    ))
+  }
+</nav>

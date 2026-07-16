@@ -1,0 +1,33 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  // Draft pages exist in `npm run dev` only, matching the articles index.
+  const showDrafts = import.meta.env.DEV;
+  const articles = await getCollection("articles", ({ data }) => showDrafts || !data.draft);
+  return articles.map((article) => ({ params: { id: article.id }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article);
+const dateText = new Intl.DateTimeFormat("en", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(article.data.date);
+---
+
+<Base title={`${article.data.title} · Pradeep Pandey`} description={article.data.description}>
+  {article.data.math && <link slot="head" rel="stylesheet" href="/katex/katex.min.css" />}
+  <article>
+    <header class="article-head">
+      <h1 class="page-title">{article.data.title}</h1>
+      <div class="article-date">{dateText}</div>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Base>

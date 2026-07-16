@@ -1,0 +1,116 @@
+# pradeepandey-r.github.io
+
+Personal site of Pradeep Pandey. Minimal Astro static site — neutral sans-serif (system stack),
+light/dark theme, and 12 switchable color palettes (picker in the header, top right) for
+choosing the final look. Client-side JavaScript is just the theme/palette controls plus
+Astro's ClientRouter (SPA-style page swaps with hover prefetch — instant, unanimated).
+
+## Theme
+
+**Swiss / International Typographic, Signal Red** (finalized). Flat ground, near-black text,
+one signal color, no warmth. Only 8 colors are authored, at the top of `src/styles/global.css`:
+
+| | Background | Text | Accent | Emphasis |
+| --- | --- | --- | --- | --- |
+| Light | `#ffffff` | `#111111` | `#e30613` | `#99040d` |
+| Dark | `#0b0b0c` | `#dcdcdc` (smoke white, never `#fff`) | `#ff453a` | `#ff8078` |
+
+Every other tone (muted text, hairlines, cards, code bg, the timeline glow, the portrait's
+red rim) is derived from those with `color-mix`, so editing a base color re-tunes the site.
+
+## CV
+
+Drop your CV at **`public/cv.pdf`** (exact name). The CV link appears in the nav
+automatically when that file exists and disappears when it doesn't, so it can never 404.
+In `npm run dev` it shows up on the next page refresh; builds always pick it up.
+Nothing else to edit.
+
+## Demo content (dev only)
+
+`npm run dev` shows sample rows on Papers/Projects (`src/data/_demo-*.json`) and any article
+with `draft: true`, each marked by a dashed banner, so the layout can be judged with content
+in it. All of it is gated on `import.meta.env.DEV`: `npm run build` strips every trace, and
+drafts never enter the RSS feed. Delete the `_demo-*.json` files and the demo article when
+you no longer want them.
+
+Real entries go in `src/data/papers.json` and `src/data/projects.json` (both start empty):
+
+```json
+{ "key": "[1]", "title": "Paper title", "meta": "Authors. Venue 2027",
+  "links": [{ "label": "arXiv", "href": "https://..." }] }
+```
+
+## Crawlers
+
+`public/robots.txt` allows search engines and opts out of ~22 named AI training crawlers
+(GPTBot, ClaudeBot, CCBot, Google-Extended, PerplexityBot, Bytespider and friends); the
+layout also sends `noai, noimageai`. This is a stated policy, not a wall: crawlers that
+ignore robots.txt will ignore this too. Your email is obfuscated in the portrait caption
+and appears nowhere as a `mailto:`.
+
+## Run locally
+
+```bash
+npm install
+npm run dev        # http://localhost:4321
+npm run build      # static output in dist/
+```
+
+## Add an article
+
+Create `src/content/articles/my-post.md` (the filename becomes the URL: `/articles/my-post/`):
+
+```markdown
+---
+title: "My post title"
+description: "One-sentence summary shown in the list and RSS."
+date: 2026-10-01
+math: true        # only if the post uses LaTeX math ($...$ / $$...$$); loads KaTeX CSS on that page
+draft: true       # keeps it out of the build until you remove this
+---
+
+Body in Markdown. Code blocks get syntax highlighting automatically.
+```
+
+Files starting with `_` are ignored — see `_template.md` for a full example of the format.
+The articles index, RSS feed, and article page are all generated from these files; nothing else to update.
+
+## Add a news line
+
+Append to `src/data/news.json` (shown newest-first on the home page):
+
+```json
+{ "date": "2026-08", "text": "Completed X." }
+```
+
+## Change the portrait
+
+The home-page photo is `public/photo.<ext>`, where the extension can be jpg, jpeg, png,
+webp, or avif; the page finds whichever exists (any aspect ratio works, it's center-cropped
+to a circle). Keep the base name `photo` and nothing else needs editing. If no photo file
+exists, the page falls back to `public/portrait-fallback.svg` (a "P" avatar) instead of
+showing a broken image.
+
+## Publish (first time)
+
+1. Create a **public** GitHub repo named exactly `pradeepandey-r.github.io`.
+2. Push this folder to it (branch `main`).
+3. On GitHub: **Settings → Pages → Source: GitHub Actions**.
+4. The included workflow (`.github/workflows/deploy.yml`) builds and deploys on every push.
+   Site appears at <https://pradeepandey-r.github.io>.
+
+## Custom domain (later)
+
+When `pradeeppandey.name.np` is registered and its DNS points at GitHub Pages:
+
+1. Add a `public/CNAME` file containing `pradeeppandey.name.np`.
+2. Change `site` in `astro.config.mjs` to `https://pradeeppandey.name.np`.
+3. Set the custom domain in the repo's Pages settings.
+
+## Notes
+
+- Fonts: neutral system sans stack (Segoe UI Variable / Segoe UI / system-ui), zero download.
+- Math: KaTeX assets are vendored in `public/katex/` and load only on pages with `math: true`.
+- Icons (GitHub, LinkedIn, arXiv): GitHub/arXiv from simple-icons; LinkedIn from Font Awesome Free (CC BY 4.0).
+  Hover recolors the glyph to its brand color and fades in a flat, ragged watercolor patch behind it
+  (SVG turbulence filter `#cloud-edge` in the layout); brand hexes live in `src/components/Socials.astro`.

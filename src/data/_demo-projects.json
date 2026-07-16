@@ -1,0 +1,31 @@
+[
+  {
+    "key": "2028",
+    "title": "sample-eval-harness",
+    "note": "Placeholder project blurb: a small evaluation harness with cached generations and versioned datasets, written to show how two lines of description sit in the layout.",
+    "tags": "Python · PyTorch · Inspect",
+    "links": [
+      { "label": "Repo", "href": "#demo" },
+      { "label": "Docs", "href": "#demo" }
+    ]
+  },
+  {
+    "key": "2027",
+    "title": "a-project-with-an-unusually-long-kebab-case-name-to-test-wrapping",
+    "note": "Checks that a long monospace-ish title wraps instead of overflowing the column.",
+    "tags": "Python · NumPy · pandas · Matplotlib · Hugging Face",
+    "links": [{ "label": "Repo", "href": "#demo" }]
+  },
+  {
+    "key": "2027",
+    "title": "demo-notebooks",
+    "note": "A one-line placeholder blurb.",
+    "tags": "Python · NumPy",
+    "links": [{ "label": "Repo", "href": "#demo" }]
+  },
+  {
+    "key": "2026",
+    "title": "minimal-entry",
+    "note": "No tags and no links, for rhythm checking."
+  }
+]

@@ -1,0 +1,43 @@
+[
+  {
+    "key": "[5]",
+    "title": "Measuring Behavioral Consistency of Safety Refusals Under Semantics-Preserving Perturbation",
+    "meta": "A. Author, B. Researcher. Sample Venue 2028",
+    "note": "Placeholder abstract line, long enough to show how a two-line summary wraps inside the entry and how it sits against the links row below.",
+    "links": [
+      { "label": "arXiv", "href": "#demo" },
+      { "label": "Code", "href": "#demo" },
+      { "label": "PDF", "href": "#demo" }
+    ]
+  },
+  {
+    "key": "[4]",
+    "title": "A Deliberately Very Long Placeholder Title That Keeps Going to Check How Two Full Lines of Wrapping Behave in the Entry Grid Without Breaking the Key Column",
+    "meta": "A. Author, B. Researcher, C. Collaborator, D. Colleague. Sample Conference 2028",
+    "links": [
+      { "label": "arXiv", "href": "#demo" },
+      { "label": "PDF", "href": "#demo" }
+    ]
+  },
+  {
+    "key": "[3]",
+    "title": "Short Placeholder Title",
+    "meta": "A. Author. Workshop Sample 2027",
+    "note": "One-liner note.",
+    "links": [{ "label": "Poster", "href": "#demo" }]
+  },
+  {
+    "key": "[2]",
+    "title": "An Entry With No Links Row, to Check Vertical Rhythm When the Row Is Absent",
+    "meta": "A. Author, B. Researcher. Sample Venue 2027"
+  },
+  {
+    "key": "[1]",
+    "title": "A Short Technical Note on Reproducing Activation-Level Probes",
+    "meta": "A. Author. Preprint 2026",
+    "links": [
+      { "label": "Code", "href": "#demo" },
+      { "label": "PDF", "href": "#demo" }
+    ]
+  }
+]
