@@ -3,24 +3,28 @@
     "venue": "LessWrong",
     "title": "Refusal in LLMs Is Mediated by a Single Direction",
     "href": "https://www.lesswrong.com/posts/jGuXSZgv6qfdhMCuJ/refusal-in-llms-is-mediated-by-a-single-direction",
-    "note": "Arditi et al. (2024). The result my planned replication study builds on."
+    "note": "Arditi et al. (2024). The result my planned replication study builds on.",
+    "pinned": true
   },
   {
     "venue": "Alignment Forum",
     "title": "200 Concrete Open Problems in Mechanistic Interpretability",
     "href": "https://www.alignmentforum.org/s/yivyHaCAmMJ3CqSyj",
-    "note": "Neel Nanda (2022). Entry points into interpretability research, from toy problems to serious projects."
+    "note": "Neel Nanda (2022). Entry points into interpretability research, from toy problems to serious projects.",
+    "pinned": true
   },
   {
     "venue": "LessWrong",
     "title": "How To Get Into Independent Research On Alignment/Agency",
     "href": "https://www.lesswrong.com/posts/P3Yt66Wh5g7SbkKuT/how-to-get-into-independent-research-on-alignment-agency",
-    "note": "John Wentworth (2021). The playbook for the independent path I'm taking."
+    "note": "John Wentworth (2021). The playbook for the independent path I'm taking.",
+    "pinned": true
   },
   {
     "venue": "LessWrong",
     "title": "AGI Ruin: A List of Lethalities",
     "href": "https://www.lesswrong.com/posts/uMQ3cqWDPHhjtiesc/agi-ruin-a-list-of-lethalities",
-    "note": "Eliezer Yudkowsky (2022). The canonical statement of why alignment is hard."
+    "note": "Eliezer Yudkowsky (2022). The canonical statement of why alignment is hard.",
+    "pinned": true
   }
 ]

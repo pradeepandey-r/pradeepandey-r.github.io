@@ -318,18 +318,20 @@ a:hover {
   inset: 0;
   border-radius: 50%;
   pointer-events: none;
+  /* crystal-clear convex glass: a small specular hotspot and a narrow moving
+     sheen, not a wash; the photo stays fully visible in both themes */
   background:
     radial-gradient(
       circle at var(--gx) var(--gy),
-      rgba(255, 255, 255, 0.32),
-      rgba(255, 255, 255, 0.07) 32%,
-      transparent 52%
+      rgba(255, 255, 255, 0.26) 0%,
+      rgba(255, 255, 255, 0.06) 13%,
+      transparent 24%
     ),
-    radial-gradient(circle at 50% 120%, rgba(0, 0, 0, 0.16), transparent 55%);
+    linear-gradient(115deg, transparent 44%, rgba(255, 255, 255, 0.08) 50%, transparent 56%);
   box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.4),
-    inset 0 -10px 20px rgba(0, 0, 0, 0.12),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+    inset 0 1px 1px rgba(255, 255, 255, 0.32),
+    inset 0 -4px 10px rgba(0, 0, 0, 0.09),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
 }
 .portrait-caption {
   text-align: center;
@@ -457,6 +459,15 @@ a:hover {
   color: var(--muted);
   font-size: 0.9rem;
   margin-top: 0.1rem;
+}
+/* pinned-highlight marker */
+.article-list .pin {
+  width: 12px;
+  height: 12px;
+  fill: var(--muted);
+  margin-right: 0.3rem;
+  vertical-align: -1px;
+  transform: rotate(25deg);
 }
 @media (max-width: 480px) {
   .article-list li {

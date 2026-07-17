@@ -2,10 +2,6 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Socials from "../components/Socials.astro";
-import fs from "node:fs";
-import { join } from "node:path";
-
-declare const __SITE_ROOT__: string; // injected in astro.config.mjs
 
 interface Props {
   title?: string;
@@ -17,11 +13,11 @@ const {
 } = Astro.props;
 
 // The CV icon (in the social rail) appears by itself once public/cv.pdf exists,
-// so it can never point at a missing file. Checked with fs against __SITE_ROOT__
-// (not cwd, not import.meta.url: the first differs under `npm --prefix`, the
-// second moves into the bundle at build). Runs per request in dev, so dropping
-// the file in just needs a page refresh; at page-generation time in builds.
-const hasCV = fs.existsSync(join(__SITE_ROOT__, "public", "cv.pdf"));
+// so it can never point at a missing file. Detected with Vite's BUILD-TIME glob,
+// not node:fs: Cloudflare prerenders inside workerd, where Node modules don't
+// exist (their build died on `node:fs`). Trade-off: after adding/removing the
+// file, restart `npm run dev`; real builds always see the current state.
+const hasCV = Object.keys(import.meta.glob("/public/cv.pdf")).length > 0;
 
 const nav = [
   { href: "/", label: "Main" },
@@ -71,14 +67,17 @@ const isCurrent = (href: string) =>
         };
         // 3D tilt on the portrait: pointer position drives rotation, the glass
         // glare (--gx/--gy) and the red glow offset (--glow-x/--glow-y) follow.
-        // Bound per page-load because ClientRouter swaps the element; skipped
-        // on touch devices, where there is no hover.
+        // Pointer events with a per-event mouse check (NOT a matchMedia hover
+        // guard: touchscreen laptops can report hover:none and lose the effect
+        // entirely). Bound on several hooks because ClientRouter swaps the
+        // element; the dataset flag prevents double-binding.
         const bindTilt = () => {
           const f = document.getElementById("portrait-frame");
-          if (!f || f.dataset.tiltBound || !matchMedia("(hover: hover)").matches) return;
+          if (!f || f.dataset.tiltBound) return;
           f.dataset.tiltBound = "1";
           const MAX = 9;
-          f.addEventListener("mousemove", (e) => {
+          f.addEventListener("pointermove", (e) => {
+            if (e.pointerType && e.pointerType !== "mouse") return;
             const r = f.getBoundingClientRect();
             const px = (e.clientX - r.left) / r.width - 0.5;
             const py = (e.clientY - r.top) / r.height - 0.5;
@@ -89,7 +88,7 @@ const isCurrent = (href: string) =>
             f.style.setProperty("--glow-x", (px * -16).toFixed(1) + "px");
             f.style.setProperty("--glow-y", (py * -12).toFixed(1) + "px");
           });
-          f.addEventListener("mouseleave", () => {
+          f.addEventListener("pointerleave", () => {
             for (const p of ["--rx", "--ry", "--gx", "--gy", "--glow-x", "--glow-y"]) f.style.removeProperty(p);
           });
         };
@@ -97,6 +96,8 @@ const isCurrent = (href: string) =>
         document.addEventListener("astro:after-swap", apply);
         document.addEventListener("astro:page-load", syncSwitch);
         document.addEventListener("astro:page-load", bindTilt);
+        document.addEventListener("DOMContentLoaded", bindTilt);
+        if (document.readyState !== "loading") bindTilt();
         document.addEventListener("click", (e) => {
           if (!(e.target instanceof Element) || !e.target.closest("#theme-toggle")) return;
           const r = document.documentElement;

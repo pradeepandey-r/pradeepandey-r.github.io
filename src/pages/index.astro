@@ -1,17 +1,14 @@
 ---
 import Base from "../layouts/Base.astro";
 import news from "../data/news.json";
-import fs from "node:fs";
-import path from "node:path";
-
-declare const __SITE_ROOT__: string; // injected in astro.config.mjs
 
 // Accept public/photo.<any common image extension> so replacing the photo
 // never silently breaks the page; without one, the fallback avatar shows.
-const photoFile = fs
-  .readdirSync(path.join(__SITE_ROOT__, "public"))
-  .find((f) => /^photo\.(jpe?g|png|webp|avif)$/i.test(f));
-const photoSrc = photoFile ? `/${photoFile}` : "/portrait-fallback.svg";
+// Build-time glob, not node:fs: Cloudflare prerenders inside workerd, where
+// Node modules don't exist. Changing the photo file needs a dev restart.
+const photoMatches = import.meta.glob("/public/photo.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}");
+const photoKey = Object.keys(photoMatches)[0];
+const photoSrc = photoKey ? photoKey.replace("/public", "") : "/portrait-fallback.svg";
 
 const fmt = (d: string) =>
   new Intl.DateTimeFormat("en", { month: "short", year: "numeric", timeZone: "UTC" }).format(

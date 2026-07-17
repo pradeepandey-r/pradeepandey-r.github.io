@@ -31,7 +31,9 @@ In `npm run dev` a page refresh picks it up; builds always do.
 There is deliberately **no `cv.pdf` right now** (the projected target-profile CV was taken
 down until real milestones exist), so no CV link or icon renders anywhere. When ready,
 generate one with `scripts/make_cv.py` (needs `pip install reportlab pypdf`) or drop in
-any PDF as `public/cv.pdf`. Font workflow:
+any PDF as `public/cv.pdf`, then restart `npm run dev` to see it locally (detection is
+build-time; deployed builds always see the current state). Same rule for swapping
+`public/photo.<ext>`. Font workflow:
 
 ```bash
 python scripts/make_cv.py --all    # one PDF per font in cv-variants/ (gitignored)

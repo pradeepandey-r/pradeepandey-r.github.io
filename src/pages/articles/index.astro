@@ -1,7 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { getCollection } from "astro:content";
-import highlights from "../../data/elsewhere.json";
+import pinned from "../../data/elsewhere.json";
 
 // Drafts render in `npm run dev` only, so work in progress (and the demo
 // article) can be previewed without ever reaching a build.
@@ -11,6 +11,35 @@ const articles = all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf(
 const drafts = articles.filter((a) => a.data.draft).length;
 const fmt = (d: Date) =>
   new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" }).format(d);
+
+// Live rows: the two newest Alignment Forum posts, fetched at render time
+// (every request in dev, every deploy in production; the weekly refresh
+// workflow re-deploys to keep them current). Failure-safe by design: any
+// network/API error leaves `live` empty and the pinned list stands alone.
+type Highlight = { venue: string; title: string; href: string; note?: string; pinned?: boolean };
+let live: Highlight[] = [];
+try {
+  const res = await fetch("https://www.alignmentforum.org/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "User-Agent": "pradeeppandey.name.np site build" },
+    body: JSON.stringify({
+      query: '{ posts(input: { terms: { view: "new", limit: 2 } }) { results { title pageUrl postedAt user { displayName } } } }',
+    }),
+    signal: AbortSignal.timeout(8000),
+  });
+  const json = await res.json();
+  live = (json?.data?.posts?.results ?? [])
+    .filter((p: any) => p?.title && p?.pageUrl)
+    .map((p: any) => ({
+      venue: "Alignment Forum",
+      title: p.title,
+      href: p.pageUrl,
+      note: `${p.user?.displayName ?? "Unknown"} · ${fmt(new Date(p.postedAt))}`,
+    }));
+} catch {
+  /* offline or API change: pinned highlights only */
+}
+const highlights: Highlight[] = [...pinned, ...live];
 ---
 
 <Base title="Articles · Pradeep Pandey" description="Technical writing by Pradeep Pandey.">
@@ -42,6 +71,12 @@ const fmt = (d: Date) =>
             <li>
               <span class="a-date">{h.venue}</span>
               <span>
+                {h.pinned && (
+                  <svg class="pin" viewBox="0 0 24 24" role="img" aria-label="Pinned">
+                    <title>Pinned</title>
+                    <path d="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z" />
+                  </svg>
+                )}
                 <a href={h.href} target="_blank" rel="noopener">
                   {h.title}
                 </a>

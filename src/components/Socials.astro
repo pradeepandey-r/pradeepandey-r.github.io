@@ -44,21 +44,20 @@ const links = [
     w: 21.5,
     h: 20,
   },
-  ...(showCV
-    ? [
-        {
-          label: "CV",
-          href: "/cv.pdf",
-          download: "Pradeep_Pandey_CV.pdf",
-          path: "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
-          viewBox: "0 0 24 24",
-          w: 22,
-          h: 22,
-          brand: "#e30613",
-          brandDark: "#ff453a",
-        },
-      ]
-    : []),
+  {
+    // Always visible; a real link only once public/cv.pdf exists. Until then
+    // it points home (user request: keep the icon, no dead file link).
+    label: showCV ? "CV" : "CV (coming soon)",
+    href: showCV ? "/cv.pdf" : "/",
+    download: showCV ? "Pradeep_Pandey_CV.pdf" : undefined,
+    path: "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
+    viewBox: "0 0 24 24",
+    w: 22,
+    h: 22,
+    brand: "#e30613",
+    brandDark: "#ff453a",
+    internal: !showCV,
+  },
 ];
 ---
 
@@ -69,8 +68,8 @@ const links = [
         href={l.href}
         title={l.label}
         aria-label={l.label}
-        target={l.download ? undefined : "_blank"}
-        rel={l.download ? undefined : "me noopener"}
+        target={l.download || l.internal ? undefined : "_blank"}
+        rel={l.download || l.internal ? undefined : "me noopener"}
         download={l.download}
         style={l.brand ? `--brand-lt:${l.brand};--brand-dk:${l.brandDark}` : undefined}
       >
