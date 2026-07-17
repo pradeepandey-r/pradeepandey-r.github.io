@@ -22,14 +22,19 @@ const fmt = (d: string) =>
 <Base>
   <section class="hero">
     <aside class="portrait-side">
-      <img
-        class="portrait"
-        src={photoSrc}
-        alt="Pradeep Pandey"
-        width="1024"
-        height="1024"
-        onerror="this.onerror=null;this.src='/portrait-fallback.svg'"
-      />
+      <div class="portrait-frame" id="portrait-frame">
+        <div class="portrait-3d">
+          <img
+            class="portrait"
+            src={photoSrc}
+            alt="Pradeep Pandey"
+            width="1024"
+            height="1024"
+            onerror="this.onerror=null;this.src='/portrait-fallback.svg'"
+          />
+          <span class="portrait-glass" aria-hidden="true"></span>
+        </div>
+      </div>
       <div class="portrait-caption">
         <div class="id-name">Pradeep Pandey</div>
         <div>BCA @ Butwal Kalika Campus</div>
@@ -39,7 +44,19 @@ const fmt = (d: string) =>
     </aside>
     <div class="hero-text">
       <p class="lede">
-        I intend to spend my career on <span class="lede-hl">AI safety & alignment</span> research.
+        I intend to spend my career on <a
+          class="lede-hl"
+          href="https://en.wikipedia.org/wiki/AI_safety"
+          target="_blank"
+          rel="noopener"
+          title="AI safety on Wikipedia">AI safety</a
+        > <span class="lede-amp">&amp;</span> <a
+          class="lede-hl"
+          href="https://en.wikipedia.org/wiki/AI_alignment"
+          target="_blank"
+          rel="noopener"
+          title="AI alignment on Wikipedia">alignment</a
+        > research.
       </p>
       <p>
         The questions that hold my attention: how stable are the safety behaviors of language models (refusal above

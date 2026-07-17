@@ -45,7 +45,8 @@ const isCurrent = (href: string) =>
     <meta name="color-scheme" content="light dark" />
     {/* Search engines welcome; AI training crawlers are opted out here and in robots.txt. */}
     <meta name="robots" content="index, follow, noai, noimageai" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {/* ?v= busts browser/CDN favicon caches when the icon changes */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
     <link rel="alternate" type="application/rss+xml" title="Pradeep Pandey: Articles" href="/rss.xml" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -68,9 +69,34 @@ const isCurrent = (href: string) =>
           const b = document.getElementById("theme-toggle");
           if (b) b.setAttribute("aria-checked", String(document.documentElement.dataset.theme === "dark"));
         };
+        // 3D tilt on the portrait: pointer position drives rotation, the glass
+        // glare (--gx/--gy) and the red glow offset (--glow-x/--glow-y) follow.
+        // Bound per page-load because ClientRouter swaps the element; skipped
+        // on touch devices, where there is no hover.
+        const bindTilt = () => {
+          const f = document.getElementById("portrait-frame");
+          if (!f || f.dataset.tiltBound || !matchMedia("(hover: hover)").matches) return;
+          f.dataset.tiltBound = "1";
+          const MAX = 9;
+          f.addEventListener("mousemove", (e) => {
+            const r = f.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width - 0.5;
+            const py = (e.clientY - r.top) / r.height - 0.5;
+            f.style.setProperty("--ry", (px * 2 * MAX).toFixed(2) + "deg");
+            f.style.setProperty("--rx", (-py * 2 * MAX).toFixed(2) + "deg");
+            f.style.setProperty("--gx", (32 + px * 55).toFixed(1) + "%");
+            f.style.setProperty("--gy", (26 + py * 55).toFixed(1) + "%");
+            f.style.setProperty("--glow-x", (px * -16).toFixed(1) + "px");
+            f.style.setProperty("--glow-y", (py * -12).toFixed(1) + "px");
+          });
+          f.addEventListener("mouseleave", () => {
+            for (const p of ["--rx", "--ry", "--gx", "--gy", "--glow-x", "--glow-y"]) f.style.removeProperty(p);
+          });
+        };
         apply();
         document.addEventListener("astro:after-swap", apply);
         document.addEventListener("astro:page-load", syncSwitch);
+        document.addEventListener("astro:page-load", bindTilt);
         document.addEventListener("click", (e) => {
           if (!(e.target instanceof Element) || !e.target.closest("#theme-toggle")) return;
           const r = document.documentElement;

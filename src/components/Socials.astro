@@ -11,15 +11,19 @@ const { variant = "rail", showCV = false } = Astro.props;
 
 // LinkedIn: simple-icons no longer ships it; path is Font Awesome Free 6
 // "linkedin-in" (CC BY 4.0, https://fontawesome.com/license/free).
-// CV: Material Icons "description" (Apache 2.0). X / Hugging Face: simple-icons.
-// brand/brandDark drive the hover color per theme. A `download` attr means
-// clicking saves the file (works on iOS Safari 13+ for same-origin files).
+// CV: Material Icons "description" (Apache 2.0). X: simple-icons.
+// Hugging Face: official multicolor logo (logos icon set).
+// w/h are optically matched per glyph: X fills its whole viewBox (renders
+// smaller), LinkedIn is a narrow tall glyph, the doc glyph has inner padding.
+// A `download` attr means clicking saves the file (iOS Safari 13+ included).
 const links = [
   {
     label: "LinkedIn",
     href: "https://www.linkedin.com/in/pradeepandey-r",
     path: "M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 155.6z",
     viewBox: "0 0 448 512",
+    w: 18.4,
+    h: 21,
     brand: "#0A66C2",
     brandDark: "#58a6e8",
   },
@@ -28,15 +32,17 @@ const links = [
     href: "https://x.com/_pradeepandey",
     path: siX.path,
     viewBox: "0 0 24 24",
+    w: 18.5,
+    h: 18.5,
     brand: "#000000",
     brandDark: "#e7e9ea",
   },
   {
-    // Official multicolor logo (logos icon set); grayscaled at rest via CSS,
-    // full color on hover. No brand vars needed: the fills are baked in.
     label: "Hugging Face",
     href: "https://huggingface.co/pradeepandey-r",
     svg: { viewBox: `0 0 ${hf.width} ${hf.height}`, body: hf.body },
+    w: 21.5,
+    h: 20,
   },
   ...(showCV
     ? [
@@ -46,6 +52,8 @@ const links = [
           download: "Pradeep_Pandey_CV.pdf",
           path: "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
           viewBox: "0 0 24 24",
+          w: 22,
+          h: 22,
           brand: "#e30613",
           brandDark: "#ff453a",
         },
@@ -68,9 +76,9 @@ const links = [
       >
         {
           l.svg ? (
-            <svg class="hf-logo" viewBox={l.svg.viewBox} aria-hidden="true" set:html={l.svg.body} />
+            <svg class="hf-logo" viewBox={l.svg.viewBox} width={l.w} height={l.h} aria-hidden="true" set:html={l.svg.body} />
           ) : (
-            <svg viewBox={l.viewBox} aria-hidden="true">
+            <svg viewBox={l.viewBox} width={l.w} height={l.h} aria-hidden="true">
               <path d={l.path} />
             </svg>
           )
