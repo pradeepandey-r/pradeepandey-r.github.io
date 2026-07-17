@@ -83,13 +83,16 @@ const isCurrent = (href: string) =>
             const py = (e.clientY - r.top) / r.height - 0.5;
             f.style.setProperty("--ry", (px * 2 * MAX).toFixed(2) + "deg");
             f.style.setProperty("--rx", (-py * 2 * MAX).toFixed(2) + "deg");
-            f.style.setProperty("--gx", (32 + px * 55).toFixed(1) + "%");
-            f.style.setProperty("--gy", (26 + py * 55).toFixed(1) + "%");
+            // the glare sits exactly under the pointer (1:1), like real glass
+            f.style.setProperty("--gx", ((px + 0.5) * 100).toFixed(1) + "%");
+            f.style.setProperty("--gy", ((py + 0.5) * 100).toFixed(1) + "%");
+            f.style.setProperty("--glare-o", "0.22");
             f.style.setProperty("--glow-x", (px * -16).toFixed(1) + "px");
             f.style.setProperty("--glow-y", (py * -12).toFixed(1) + "px");
           });
           f.addEventListener("pointerleave", () => {
-            for (const p of ["--rx", "--ry", "--gx", "--gy", "--glow-x", "--glow-y"]) f.style.removeProperty(p);
+            for (const p of ["--rx", "--ry", "--gx", "--gy", "--glare-o", "--glow-x", "--glow-y"])
+              f.style.removeProperty(p);
           });
         };
         apply();

@@ -92,11 +92,12 @@ a:hover {
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  /* soft accent wash (like the glow behind the portrait), not full signal red */
+  background: color-mix(in srgb, var(--accent) 24%, var(--bg));
+  color: var(--text);
 }
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, var(--muted));
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -197,7 +198,7 @@ a:hover {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--accent);
+  background: color-mix(in srgb, var(--accent) 50%, var(--muted));
   transition: transform 0.22s ease;
 }
 :root[data-theme="dark"] .theme-switch .knob {
@@ -292,10 +293,13 @@ a:hover {
   position: absolute;
   inset: 4%;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  background: color-mix(in srgb, var(--accent) var(--glow-a, 28%), transparent);
   filter: blur(18px);
   transform: translate(var(--glow-x, 0px), var(--glow-y, 0px));
   transition: transform 0.18s ease-out;
+}
+:root[data-theme="dark"] .portrait-frame::before {
+  --glow-a: 18%; /* the bright dark-mode accent needs less of it to read */
 }
 .portrait-3d {
   position: relative;
@@ -318,20 +322,26 @@ a:hover {
   inset: 0;
   border-radius: 50%;
   pointer-events: none;
-  /* crystal-clear convex glass: a small specular hotspot and a narrow moving
-     sheen, not a wash; the photo stays fully visible in both themes */
-  background:
-    radial-gradient(
-      circle at var(--gx) var(--gy),
-      rgba(255, 255, 255, 0.26) 0%,
-      rgba(255, 255, 255, 0.06) 13%,
-      transparent 24%
-    ),
-    linear-gradient(115deg, transparent 44%, rgba(255, 255, 255, 0.08) 50%, transparent 56%);
+  /* crystal-clear convex glass: one small specular hotspot that sits exactly
+     under the pointer (--gx/--gy track it 1:1; --glare-o rises on hover),
+     plus a hairline rim. No sheen bands, no broad washes, no heavy shading:
+     those read as smudges and darkened the photo. */
+  background: radial-gradient(
+    circle at var(--gx, 32%) var(--gy, 24%),
+    rgba(255, 255, 255, var(--glare-o, 0.1)) 0%,
+    rgba(255, 255, 255, calc(var(--glare-o, 0.1) * 0.3)) 11%,
+    transparent 20%
+  );
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.32),
-    inset 0 -4px 10px rgba(0, 0, 0, 0.09),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    inset 0 1px 1px rgba(255, 255, 255, var(--glass-top, 0.26)),
+    inset 0 -3px 8px rgba(0, 0, 0, var(--glass-shade, 0.05)),
+    inset 0 0 0 1px rgba(255, 255, 255, var(--glass-rim, 0.1));
+}
+:root[data-theme="dark"] .portrait-glass {
+  /* same glass, quieter: bright highlights over a dark page read harsher */
+  --glass-top: 0.16;
+  --glass-shade: 0.08;
+  --glass-rim: 0.07;
 }
 .portrait-caption {
   text-align: center;
@@ -358,6 +368,28 @@ a:hover {
     max-width: 11.5rem;
     margin-inline: auto;
   }
+}
+
+/* ---------- interest chips ---------- */
+.chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+}
+.chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.22rem 0.75rem;
+  background: var(--card);
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ---------- news: neon timeline (dimmed) ---------- */
@@ -443,12 +475,13 @@ a:hover {
   gap: 1rem;
   padding-block: 0.5rem;
 }
-/* list titles: the nav-hover shade (deep red), not the loud base accent */
+/* list titles: the nav-hover shade (deep red); hovering goes QUIETER still,
+   toward the text color, so nothing flares bright red */
 .article-list a {
   color: var(--accent-deep);
 }
 .article-list a:hover {
-  color: var(--accent);
+  color: color-mix(in srgb, var(--accent-deep) 50%, var(--text));
 }
 .article-list .a-date {
   color: var(--muted);
@@ -527,7 +560,7 @@ a:hover {
   color: var(--accent-deep);
 }
 .entry-links a:hover {
-  color: var(--accent);
+  color: color-mix(in srgb, var(--accent-deep) 50%, var(--text));
 }
 .entry-tags {
   color: var(--muted);
@@ -733,8 +766,18 @@ a:hover {
   }
   .site-nav {
     gap: 0.3rem 1rem;
-    padding-inline: 0 3rem; /* switch zone on the right only; links lead left */
-    justify-content: flex-start;
+    padding-inline: 3rem; /* symmetric, so the row stays centered like desktop */
+    justify-content: center;
+  }
+  @media (max-width: 420px) {
+    .site-nav {
+      gap: 0.3rem 0.8rem;
+      padding-inline: 2.7rem;
+    }
+    .site-nav a {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+    }
   }
   .site-nav a {
     font-size: 0.68rem;

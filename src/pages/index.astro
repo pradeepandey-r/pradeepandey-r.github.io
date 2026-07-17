@@ -46,13 +46,7 @@ const fmt = (d: string) =>
           href="https://en.wikipedia.org/wiki/AI_safety"
           target="_blank"
           rel="noopener"
-          title="AI safety on Wikipedia">AI safety</a
-        > <span class="lede-amp">&amp;</span> <a
-          class="lede-hl"
-          href="https://en.wikipedia.org/wiki/AI_alignment"
-          target="_blank"
-          rel="noopener"
-          title="AI alignment on Wikipedia">alignment</a
+          title="AI safety on Wikipedia (covers alignment)">AI safety &amp; alignment</a
         > research.
       </p>
       <p>
@@ -67,6 +61,15 @@ const fmt = (d: string) =>
       </p>
     </div>
   </section>
+
+  <h2 class="section-head">Interests</h2>
+  <ul class="chips" aria-label="Research interests">
+    {
+      ["AI safety", "Alignment", "Interpretability", "Robustness evaluation", "Multilingual safety"].map((k) => (
+        <li class="chip">{k}</li>
+      ))
+    }
+  </ul>
 
   <h2 class="section-head">News</h2>
   <ul class="news">
