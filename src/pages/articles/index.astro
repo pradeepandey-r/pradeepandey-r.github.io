@@ -12,34 +12,10 @@ const drafts = articles.filter((a) => a.data.draft).length;
 const fmt = (d: Date) =>
   new Intl.DateTimeFormat("en", { month: "short", day: "2-digit", year: "numeric", timeZone: "UTC" }).format(d);
 
-// Live rows: the two newest Alignment Forum posts, fetched at render time
-// (every request in dev, every deploy in production; the weekly refresh
-// workflow re-deploys to keep them current). Failure-safe by design: any
-// network/API error leaves `live` empty and the pinned list stands alone.
+// "Highlights from the field": a hand-picked reading list (src/data/elsewhere.json).
+// Intentionally STATIC and curated — not a live feed. Every row is a pinned pick.
 type Highlight = { venue: string; title: string; href: string; note?: string; pinned?: boolean };
-let live: Highlight[] = [];
-try {
-  const res = await fetch("https://www.alignmentforum.org/graphql", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "User-Agent": "pradeeppandey.name.np site build" },
-    body: JSON.stringify({
-      query: '{ posts(input: { terms: { view: "new", limit: 2 } }) { results { title pageUrl postedAt user { displayName } } } }',
-    }),
-    signal: AbortSignal.timeout(8000),
-  });
-  const json = await res.json();
-  live = (json?.data?.posts?.results ?? [])
-    .filter((p: any) => p?.title && p?.pageUrl)
-    .map((p: any) => ({
-      venue: "Alignment Forum",
-      title: p.title,
-      href: p.pageUrl,
-      note: `${p.user?.displayName ?? "Unknown"} · ${fmt(new Date(p.postedAt))}`,
-    }));
-} catch {
-  /* offline or API change: pinned highlights only */
-}
-const highlights: Highlight[] = [...pinned, ...live];
+const highlights: Highlight[] = pinned;
 ---
 
 <Base title="Articles · Pradeep Pandey" description="Technical writing by Pradeep Pandey.">

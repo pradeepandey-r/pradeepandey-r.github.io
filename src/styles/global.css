@@ -21,6 +21,12 @@
   --text: #dcdcdc;
   --accent: #ff453a;
   --accent-deep: #ff8078;
+  /* Cast shadows must be BLACK here, not derived from --text like the light-mode
+     shadow further down: in dark mode --text is near-white, so a text-derived
+     shadow comes out light and vanishes on the near-black ground, wiping the
+     portrait's lift. Black + boosted alpha so it still reads over #0b0b0c.
+     (This wins over the derived :root value below by specificity.) */
+  --shadow: color-mix(in srgb, #000 72%, transparent);
   color-scheme: dark;
 }
 
@@ -288,18 +294,29 @@ a:hover {
   --gx: 32%;
   --gy: 26%;
 }
+/* Ambient red halo behind the disc. It sits PROUD of the disc (negative inset)
+   so the wash escapes evenly on every side: at the old `inset: 4%` the glow was
+   smaller than the opaque photo and only leaked out at the bottom, where the
+   drop shadow pushed it clear, which read as "red only under the card". */
 .portrait-frame::before {
   content: "";
   position: absolute;
-  inset: 4%;
+  inset: var(--glow-inset, -3%);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) var(--glow-a, 28%), transparent);
-  filter: blur(18px);
+  background: color-mix(in srgb, var(--accent) var(--glow-a, 26%), transparent);
+  /* saturate() keeps the halo chromatic instead of washing pink as it blurs */
+  filter: blur(var(--glow-blur, 11px)) saturate(var(--glow-sat, 1.15));
   transform: translate(var(--glow-x, 0px), var(--glow-y, 0px));
   transition: transform 0.18s ease-out;
 }
 :root[data-theme="dark"] .portrait-frame::before {
-  --glow-a: 18%; /* the bright dark-mode accent needs less of it to read */
+  /* Dark still needs somewhat more than light (a faint wash has nothing to lift
+     off a #0b0b0c ground), but only a little: dialed back from 52%, which read
+     as too bright. Target is "clearly present", not "glowing". */
+  --glow-a: 34%;
+  --glow-blur: 13px;
+  --glow-sat: 1.25;
+  --glow-inset: -3.5%;
 }
 .portrait-3d {
   position: relative;
@@ -307,7 +324,30 @@ a:hover {
   transform: rotateX(var(--rx)) rotateY(var(--ry));
   transition: transform 0.16s ease-out;
   will-change: transform;
-  box-shadow: 0 12px 26px -14px var(--shadow);
+  /* Layer 1 = the float: a tight, offset contact shadow (dark, no color).
+     Layer 2+ = neon falloff hugging the border, bright core into a wide bloom.
+     Keeping the shadow dark and the bloom colored is what separates the disc
+     from its own glow, so it reads as floating ABOVE the light rather than
+     sitting in it. */
+  box-shadow:
+    0 14px 30px -16px var(--shadow),
+    0 0 var(--neon-1-b, 10px) var(--neon-1-s, -3px) var(--neon-1, transparent),
+    0 0 var(--neon-2-b, 26px) var(--neon-2-s, -6px) var(--neon-2, transparent);
+  --neon-1: color-mix(in srgb, var(--accent) 18%, transparent);
+  --neon-2: color-mix(in srgb, var(--accent) 10%, transparent);
+  --neon-1-b: 5px;
+  --neon-2-b: 15px;
+}
+:root[data-theme="dark"] .portrait-3d {
+  /* Enough to read as a rim light on a dark page, no more. The first pass ran
+     62%/34% and was too bright; it also flooded the edge zone and washed out
+     the gray inner shading that gives the disc its convex 3D read. */
+  --neon-1: color-mix(in srgb, var(--accent) 28%, transparent);
+  --neon-2: color-mix(in srgb, var(--accent) 16%, transparent);
+  --neon-1-b: 7px;
+  --neon-1-s: -2px;
+  --neon-2-b: 18px;
+  --neon-2-s: -5px;
 }
 .portrait {
   width: 100%;
@@ -316,6 +356,15 @@ a:hover {
   object-fit: cover;
   border-radius: 50%; /* circle */
   display: block;
+  /* Feather the last ~1px of the photo edge so the disc melts into its halo
+     instead of ending on a razor line. The halo behind stays sharp, and a soft
+     object over a defined glow is what sells "floating". Kept very tight on
+     purpose: across the feathered ring the photo is part-transparent, so the
+     glass's black edge shading falls on the PAGE behind it — which reads gray
+     on white but disappears on near-black. A wide feather therefore breaks
+     light/dark parity of the inner shading (and blurs the portrait besides). */
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 var(--edge-feather, 99.3%), transparent 100%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 var(--edge-feather, 99.3%), transparent 100%);
 }
 .portrait-glass {
   position: absolute;
@@ -334,12 +383,38 @@ a:hover {
   );
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, var(--glass-top, 0.26)),
+    /* Convex EDGE SHADING: a THIN shadow hugging the inner rim and fading
+       inward — the cue that makes the disc read as a recessed glass dome.
+       It multiplies black over the photo, so an IDENTICAL alpha produces an
+       identical pixel result in both themes... but NOT an identical
+       perception. Against a white page the band sits next to something
+       brighter than itself and reads clearly; against a near-black page the
+       same gray is pushed lighter by simultaneous contrast, and the bright
+       photo (now a glaring patch in a dark field) scatters light in the eye
+       and washes out the low-contrast gradient right at its border. So dark
+       must OVERSHOOT to look equal — see the dark override below. */
+    inset 0 0 var(--glass-edge-b, 6px) 0 rgba(0, 0, 0, var(--glass-edge, 0.19)),
+    /* a little extra weight low down, like a dome lit from above */
     inset 0 -3px 8px rgba(0, 0, 0, var(--glass-shade, 0.05)),
-    inset 0 0 0 1px rgba(255, 255, 255, var(--glass-rim, 0.1));
+    inset 0 0 0 1px rgba(255, 255, 255, var(--glass-rim, 0.1)),
+    /* dark-only: the inner edge CATCHES the red rim light, so the neon reads as
+       wrapping the glass rather than sitting behind it (transparent in light) */
+    inset 0 0 9px -2px var(--glass-neon, transparent);
 }
 :root[data-theme="dark"] .portrait-glass {
-  /* same glass, quieter: bright highlights over a dark page read harsher */
-  --glass-top: 0.16;
+  /* The gray edge band is the convex 3D cue, so nothing here may compete with
+     it, and it has to be pushed HARDER than light to look the same (perceptual
+     overshoot, reasons in the base rule). Matching the numbers is what failed;
+     matching the appearance takes roughly 1.7x the alpha and a touch more
+     spread. Earlier mistakes that erased it in dark, do not reintroduce:
+       - a red --glass-neon (42%) sat right on top of the gray band and lit it
+         back up; dropped entirely, the outer rim light already carries the red.
+       - --glass-rim was raised to 0.14, but white-on-#0b0b0c is far louder than
+         white-on-white, so raising it in dark is backwards for parity. It now
+         sits BELOW light's 0.10, which is what makes the two themes match. */
+  --glass-edge: 0.33;
+  --glass-edge-b: 7px;
+  --glass-top: 0.14;
   --glass-shade: 0.08;
   --glass-rim: 0.07;
 }
