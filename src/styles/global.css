@@ -303,7 +303,7 @@ a:hover {
   position: absolute;
   inset: var(--glow-inset, -3%);
   border-radius: 50%;
-  background: color-mix(in srgb, var(--accent) var(--glow-a, 26%), transparent);
+  background: color-mix(in srgb, var(--accent) var(--glow-a, 17%), transparent);
   /* saturate() keeps the halo chromatic instead of washing pink as it blurs */
   filter: blur(var(--glow-blur, 11px)) saturate(var(--glow-sat, 1.15));
   transform: translate(var(--glow-x, 0px), var(--glow-y, 0px));
@@ -313,7 +313,7 @@ a:hover {
   /* Dark still needs somewhat more than light (a faint wash has nothing to lift
      off a #0b0b0c ground), but only a little: dialed back from 52%, which read
      as too bright. Target is "clearly present", not "glowing". */
-  --glow-a: 34%;
+  --glow-a: 22%;
   --glow-blur: 13px;
   --glow-sat: 1.25;
   --glow-inset: -3.5%;
@@ -333,8 +333,8 @@ a:hover {
     0 14px 30px -16px var(--shadow),
     0 0 var(--neon-1-b, 10px) var(--neon-1-s, -3px) var(--neon-1, transparent),
     0 0 var(--neon-2-b, 26px) var(--neon-2-s, -6px) var(--neon-2, transparent);
-  --neon-1: color-mix(in srgb, var(--accent) 18%, transparent);
-  --neon-2: color-mix(in srgb, var(--accent) 10%, transparent);
+  --neon-1: color-mix(in srgb, var(--accent) 12%, transparent);
+  --neon-2: color-mix(in srgb, var(--accent) 7%, transparent);
   --neon-1-b: 5px;
   --neon-2-b: 15px;
 }
@@ -342,8 +342,8 @@ a:hover {
   /* Enough to read as a rim light on a dark page, no more. The first pass ran
      62%/34% and was too bright; it also flooded the edge zone and washed out
      the gray inner shading that gives the disc its convex 3D read. */
-  --neon-1: color-mix(in srgb, var(--accent) 28%, transparent);
-  --neon-2: color-mix(in srgb, var(--accent) 16%, transparent);
+  --neon-1: color-mix(in srgb, var(--accent) 18%, transparent);
+  --neon-2: color-mix(in srgb, var(--accent) 10%, transparent);
   --neon-1-b: 7px;
   --neon-1-s: -2px;
   --neon-2-b: 18px;
